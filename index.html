@@ -184,9 +184,6 @@ var Fr={},Gr={};var Wr,Hr=function(){function t(t,e,n){var i=this;this._sleepAft
   <div class="chart-title" style="margin-top:14px;border-top:1px solid var(--border);padding-top:10px">📈 价值成长六维打分 · 历史跟踪（月频回放）</div>
   <div class="chart-note">把六维打分模型在历史每个月回放：各维度±1打分堆叠为总分（绿=+1成长，红=−1价值），紫粗线=总分（右轴）。可观察风格判断的切换时点与持续性。</div>
   <div id="cVgScoreHist" style="width:100%;height:420px"></div>
-  <div class="chart-title" style="margin-top:8px">50−300 ERP差值预警（超大盘风格脆弱性监测）</div>
-  <div class="chart-note">spread=上证50 ERP − 沪深300 ERP，高=50的股债性价比相对占优。橙线（右轴）=5年滚动分位；<b>绿虚线=20%预警线</b>。经2005-2026月度+日频双重回测，唯一有效形态：<b>分位跌破20%后，未来21个交易日 50/300 比值下跌概率约78%</b>（63日后失效）；高位（便宜端）经回测无效，仅供观察。当前指标卡信号：触发=偏小盘。</div>
-  <div id="cErpSpread" style="width:100%;height:320px"></div>
   <div class="chart-title" style="margin-top:8px">宽基指数股债ERP对比（切换指数，默认沪深300）</div>
   <div class="chart-note">各指数 ERP = 1/PE − 10Y国债；5年滚动μ/±1σ通道；<b>悬停显示当日历史分位</b>。上证指数与中证2000为官方静态PE口径（其余为TTM），跨指数绝对值不宜直接比，看各自通道内分位。操作：点按钮切指数。</div>
   <div id="beSelBar" style="margin:6px 0"></div>
@@ -675,10 +672,10 @@ M2[3].chart='cErpMom'; M2[3].extra='<div class="r"><b>读图：</b>ERP 6M动量�
 const cmpI=D.style.indicators.findIndex(i=>i.name&&i.name.includes('对比'));
 if(cmpI>=0){M2[cmpI].chart='cSizeCmp';M2[cmpI].extra='<div class="r"><b>读图：</b>两线=指数归一走势（起点=100，上行为强）；虚线=300/2000比值（右轴，走高=大盘占优）。与流动性信号背离时警惕风格切换。</div>';}
 const spI=D.style.indicators.findIndex(i=>i.name&&i.name.includes('50−300 ERP差值'));
-/* 2026-09-23修复：底部静态区已有 id=cErpSpread 图容器（含完整回测注释），
-   块内再挂同名图会产生重复DOM id→图表只init第一处、底部永远空白（十大bug第6类复发）。
-   M2块改为纯文字卡指向底部图，图表全局只保留一份。 */
-if(spI>=0){M2[spI].chart=null;M2[spI].extra='<div class="r"><b>读图：</b>图见本页下方「50−300 ERP差值预警」板块（带20%预警线与完整回测注释）。紫线=spread（50相对300的股债性价比优势），橙线（右轴）=5年滚动分位。信号只在分位<b>跌破20%绿线</b>时触发（未来21日50/300下跌概率78%）；当前若处于高分位区（50便宜极值），经回测不构成买点，仅观察。</div>';}
+/* 2026-10-26修复：趋势图并入本指标卡（id=cErpSpread 全页唯一），原底部静态区块已删除，
+   消除"一文字卡+一图区"双区块形态；旧"重复DOM id"约束随静态区删除而消除。
+   读图要点已合并原底部 chart-note（回测结论仍在指标 meta 中）。 */
+if(spI>=0){M2[spI].chart='cErpSpread';M2[spI].extra='<div class="r"><b>读图：</b>紫线=spread（上证50 ERP − 沪深300 ERP，高=50的股债性价比相对占优），橙线（右轴）=5年滚动分位，<b>绿虚线=20%预警线</b>。经2005-2026月度+日频双重回测，信号只在分位<b>跌破20%绿线</b>时触发（未来21个交易日 50/300 比值下跌概率约78%，63日后失效）；高位（便宜端）经回测无效（58%≈抛硬币）仅供观察、不构成买点。</div>';}
 document.getElementById('m2blocks').innerHTML=(window._vgScoreHtml||'')+M2.map((b,k)=>ablock(k+1,b.i,b.chart,!!b.chart,b.extra||'')).join('');
 
 mk('cLiq',{...base,tooltip:{trigger:'axis'},
